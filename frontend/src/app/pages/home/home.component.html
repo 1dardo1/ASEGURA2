@@ -1,0 +1,13 @@
+<div class="home-container">
+  <app-settings-button></app-settings-button>
+  <img src="assets/fondoInicio.jpg" alt="Fondo de inicio" class="background"/>
+  <img src="assets/titulo.png" alt="Título A$EGURA2" class="title-img"/>
+  <button class="play-btn" (click)="onPlayClick()">JUGAR</button>
+  @if (showModal) {
+    <app-game-session-modal
+      [players]="modalPlayers"
+      (continue)="onContinueGame()"
+      (newGame)="onNewGame()"
+    ></app-game-session-modal>
+  }
+</div>

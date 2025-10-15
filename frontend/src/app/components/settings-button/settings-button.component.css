@@ -1,0 +1,26 @@
+.settings-btn {
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  background: #b89f2f;
+  border: none;
+  box-shadow: 0 2px 12px #29292933;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.3em;
+  border: solid;
+  border-width: 3px;
+  border-color: black;
+  box-shadow: 0px 0px 0px 7px #b89f2f;
+}
+.settings-btn:hover {
+  background: #cfb84e;
+  box-shadow: 0px 0px 0px 7px #cfb84e;
+
+}
+.ajustes{
+  height: 70%;
+  width: 90%;
+}
+

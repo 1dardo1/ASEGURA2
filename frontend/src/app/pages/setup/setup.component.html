@@ -1,0 +1,49 @@
+<div class="setup-container">
+  <!-- Botón Settings original - esquina superior izquierda -->
+  <app-settings-button class="settings-btn-positioned"></app-settings-button>
+  
+  <!-- Botón Volver - esquina inferior izquierda (solo visible si se ha seleccionado cantidad) -->
+  @if (playerCountSelected) {
+    <button class="back-btn" (click)="goBack()">← Volver</button>
+  }
+
+  @if (!playerCountSelected) {
+    <h2>Seleccione la cantidad de jugadores</h2>
+  }
+
+  @if (!playerCountSelected) {
+    <div class="player-count-menu">
+      @for (n of playerOptions; track n) {
+        <button (click)="selectPlayerCount(n)">
+          {{ n }}
+        </button>
+      }
+    </div>
+  }
+
+  @if (playerCountSelected) {
+    <div class="player-name-form">
+      <h2 class="names-title">Ingrese los nombres de los jugadores</h2>
+      
+      <form #nameForm="ngForm" class="form-content">
+        <div class="name-inputs-grid" [attr.data-players]="playerCountSelected">
+          @for (i of playerIndices; track i) {
+            <input
+              type="text"
+              [(ngModel)]="playerNames[i]"
+              name="playerName{{i}}"
+              required
+              minlength="1"
+              maxlength="20"
+              placeholder="Jugador {{ i + 1 }}"
+            />
+          }
+        </div>
+      </form>
+      
+      <button type="button" class="continue-btn" [disabled]="!nameForm.form.valid" (click)="startGame()">
+        CONTINUAR
+      </button>
+    </div>
+  }
+</div>

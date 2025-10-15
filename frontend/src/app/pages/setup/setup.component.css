@@ -1,0 +1,272 @@
+.setup-container {
+  height: 100vh;
+  width: 100vw;
+  background: #b2d496;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1vh 1vw;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Posicionamiento para el botón settings original */
+.settings-btn-positioned {
+  position: absolute;
+  top: 3vh;
+  left: 3vw;
+  z-index: 10;
+}
+
+/* Botón Volver - esquina inferior izquierda */
+.back-btn {
+  position: absolute;
+  bottom: 3vh;
+  left: 3vw;
+  padding: 1.5vh 3vw;
+  font-size: 2.5vh;
+  border: 3px solid #6fc98a;
+  border-radius: 25px;
+  background: #fff;
+  color: #6fc98a;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(111, 201, 138, 0.3);
+  z-index: 10;
+}
+
+.back-btn:hover {
+  background: #6fc98a;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(111, 201, 138, 0.5);
+}
+
+h2, h3 {
+  color: #2c5f2e;
+  text-align: center;
+  margin: 0;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+h2 { 
+  font-size: 5vh;
+}
+
+h3 { 
+  font-size: 3.5vh;
+}
+
+/* Título específico para la sección de nombres - más grande */
+.names-title {
+  font-size: 6vh !important;
+  margin-bottom: 2vh;
+}
+
+/* Botones cantidad jugadores */
+.player-count-menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3vh;
+  width: 100%;
+  margin-top: 3vh;
+}
+
+.player-count-menu button {
+  width: 14vh;
+  height: 14vh;
+  border-radius: 50%;
+  border: 4px solid #6fc98a;
+  background: #fff;
+  color: #6fc98a;
+  font-size: 4vh;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(111, 201, 138, 0.3);
+}
+
+.player-count-menu button:hover {
+  background: #6fc98a;
+  color: #fff;
+  transform: translateY(-8px);
+  box-shadow: 0 12px 35px rgba(111, 201, 138, 0.5);
+}
+
+/* Formulario nombres */
+.player-name-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.form-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+  margin-top: 2vh;
+}
+
+.name-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 4vh 2vw;
+  width: 94vw;
+  max-width: 94vw;
+  justify-items: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.name-inputs-grid input {
+  width: 20vw;
+  max-width: 20vw;
+  min-width: 120px;
+  height: 8vh;
+  padding: 2vh 1.5vw;
+  font-size: 2.5vh;
+  border-radius: 30px;
+  border: 4px solid #6fc98a;
+  background: #fff;
+  color: #2c5f2e;
+  text-align: center;
+  outline: none;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(111, 201, 138, 0.3);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.name-inputs-grid input:focus {
+  border-color: #5ab377;
+  box-shadow: 0 0 20px rgba(111, 201, 138, 0.6);
+  transform: scale(1.02);
+}
+
+.name-inputs-grid input::placeholder {
+  color: #a0c4a8;
+  font-weight: 400;
+}
+
+/* Botón continuar */
+.continue-btn {
+  padding: 3vh 12vw;
+  font-size: 3.5vh;
+  border: none;
+  border-radius: 50px;
+  background: #6fc98a;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(111, 201, 138, 0.4);
+  flex-shrink: 0;
+  margin-top: 4vh;
+}
+
+.continue-btn:hover:not(:disabled) {
+  background: #5ab377;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(111, 201, 138, 0.6);
+}
+
+.continue-btn:disabled {
+  background: #999;
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Casos especiales para número de jugadores */
+.name-inputs-grid[data-players="2"] {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+  gap: 4vh 4vw;
+}
+
+.name-inputs-grid[data-players="3"] {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr;
+  gap: 4vh 3vw;
+}
+
+.name-inputs-grid[data-players="2"] input,
+.name-inputs-grid[data-players="3"] input {
+  width: 25vw;
+  max-width: 25vw;
+}
+
+/* Responsive para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .back-btn {
+    padding: 1vh 2vw;
+    font-size: 2vh;
+  }
+  
+  .names-title {
+    font-size: 4.5vh !important;
+  }
+  
+  .player-count-menu button {
+    width: 12vh;
+    height: 12vh;
+    font-size: 3vh;
+  }
+  
+  .name-inputs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    width: 90vw;
+    gap: 3vh 4vw;
+  }
+  
+  .name-inputs-grid input {
+    width: 35vw;
+    max-width: 35vw;
+    height: 7vh;
+    font-size: 2vh;
+  }
+  
+  .continue-btn {
+    padding: 2.5vh 10vw;
+    font-size: 3vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .names-title {
+    font-size: 4vh !important;
+  }
+  
+  .name-inputs-grid {
+    grid-template-columns: 1fr;
+    gap: 3vh;
+  }
+  
+  .name-inputs-grid input {
+    width: 70vw;
+    max-width: 70vw;
+    height: 6vh;
+  }
+  
+  .player-count-menu button {
+    width: 10vh;
+    height: 10vh;
+    font-size: 2.5vh;
+  }
+}

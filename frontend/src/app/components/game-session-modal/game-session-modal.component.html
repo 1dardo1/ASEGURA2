@@ -1,0 +1,13 @@
+<div class="modal-bg">
+    <div class="modal">
+        <h2>Hay una partida en curso</h2>
+        <p>Jugadores:</p>
+        <ul>
+            @for (name of players; track name) {
+                <li>{{ name }}</li>
+            }
+        </ul>
+        <button class="continue-btn" (click)="continue.emit()">Continuar partida</button>
+        <button class="newgame-btn" (click)="newGame.emit()">Nueva partida</button>
+    </div>
+</div>

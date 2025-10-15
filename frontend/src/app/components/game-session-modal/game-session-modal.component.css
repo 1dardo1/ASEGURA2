@@ -1,0 +1,14 @@
+.modal-bg {
+  position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.45); z-index: 99; display: flex; justify-content: center; align-items: center;
+}
+.modal {
+  background: #fff; padding: 1.5em 2.5em; border-radius: 25px; box-shadow: 0 8px 32px #0004; text-align: center;
+  min-width: 280px;
+}
+.continue-btn, .newgame-btn {
+  margin: 1em; padding: 1em 2em; border-radius: 16px; border: none; cursor: pointer;
+  font-size: 1.13em;
+}
+.continue-btn { background: #6fc98a; color: #fff; }
+.newgame-btn { background: #f87878; color: #fff; }
