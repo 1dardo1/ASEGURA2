@@ -200,4 +200,27 @@ export class BoardCalculator {
     }
   }, timeout);
   }
+  static handleResize(
+    scene: Phaser.Scene,
+    boardImage: Phaser.GameObjects.Image,
+    updateTokensCallback: (positions: BoardPosition[], cellSize: { width: number, height: number }) => void
+  ): void {
+    if (!boardImage) return;
+
+    const { width, height } = scene.scale.gameSize;
+
+    // Reubicar y redimensionar la imagen
+    boardImage.setPosition(width / 2, height / 2);
+    BoardCalculator.fitImageToArea(boardImage, width, height);
+
+    // Actualizar posiciones y tamaño de casilla
+    const positions = BoardCalculator.updateBoardPositions(boardImage);
+    const cellSize = BoardCalculator.getCellSize(boardImage);
+
+    // Llamar callback para actualizar fichas (tokens)
+    if (updateTokensCallback) {
+      updateTokensCallback(positions, cellSize);
+    }
+  }
+
 }

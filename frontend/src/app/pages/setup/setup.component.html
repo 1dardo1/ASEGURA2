@@ -1,49 +1,109 @@
 <div class="setup-container">
-  <!-- Botón Settings original - esquina superior izquierda -->
+  <!-- Botón Settings Original -->
   <app-settings-button class="settings-btn-positioned"></app-settings-button>
-  
-  <!-- Botón Volver - esquina inferior izquierda (solo visible si se ha seleccionado cantidad) -->
-  @if (playerCountSelected) {
-    <button class="back-btn" (click)="goBack()">← Volver</button>
-  }
 
-  @if (!playerCountSelected) {
-    <h2>Seleccione la cantidad de jugadores</h2>
-  }
-
-  @if (!playerCountSelected) {
-    <div class="player-count-menu">
-      @for (n of playerOptions; track n) {
-        <button (click)="selectPlayerCount(n)">
-          {{ n }}
-        </button>
-      }
+  <!-- Selección de cantidad de jugadores -->
+  @if (playerCountSelected === null) {
+    <div class="player-count-section">
+      <h2>¿Cuántos jugadores?</h2>
+      <div class="player-count-menu">
+        @for (option of playerOptions; track option) {
+          <button (click)="selectPlayerCount(option)">
+            {{ option }}
+          </button>
+        }
+      </div>
     </div>
   }
 
-  @if (playerCountSelected) {
+  <!-- Formulario de nombres -->
+  @if (playerCountSelected !== null && !showTutorial) {
     <div class="player-name-form">
-      <h2 class="names-title">Ingrese los nombres de los jugadores</h2>
-      
-      <form #nameForm="ngForm" class="form-content">
+      <h3 class="names-title">Nombres de jugadores</h3>
+      <div class="form-content">
         <div class="name-inputs-grid" [attr.data-players]="playerCountSelected">
-          @for (i of playerIndices; track i) {
+          @for (index of playerIndices; track index) {
             <input
               type="text"
-              [(ngModel)]="playerNames[i]"
-              name="playerName{{i}}"
-              required
-              minlength="1"
-              maxlength="20"
-              placeholder="Jugador {{ i + 1 }}"
+              [(ngModel)]="playerNames[index]"
+              [placeholder]="'Jugador ' + (index + 1)"
             />
           }
         </div>
-      </form>
-      
-      <button type="button" class="continue-btn" [disabled]="!nameForm.form.valid" (click)="startGame()">
-        CONTINUAR
-      </button>
+      </div>
+      <button class="continue-btn" (click)="startGame()">Continuar</button>
+    </div>
+  }
+
+  <!-- Botón Volver -->
+  @if (playerCountSelected !== null && !showTutorial) {
+    <button class="back-btn" (click)="goBack()">
+      ← Volver
+    </button>
+  }
+
+  <!-- MODAL DEL TUTORIAL -->
+  @if (showTutorial) {
+    <div class="tutorial-overlay">
+      <div class="tutorial-modal">
+        <!-- Header del modal -->
+        <div class="tutorial-header">
+          <h2>{{ tutorialScreens[currentTutorialScreen].title }}</h2>
+        </div>
+        <!-- Contenido del tutorial -->
+        <div class="tutorial-content">
+          <!-- Descripción -->
+          <div class="tutorial-description">
+            <p>{{ tutorialScreens[currentTutorialScreen].description }}</p>
+          </div>
+          <!-- Imágenes -->
+          <div class="tutorial-images">
+            @if (tutorialScreens[currentTutorialScreen].imageUrl) {
+              <img
+                [src]="tutorialScreens[currentTutorialScreen].imageUrl"
+                alt="Tutorial image"
+                class="tutorial-image"
+              />
+            }
+            @if (tutorialScreens[currentTutorialScreen].imageUrl2) {
+              <img
+                [src]="tutorialScreens[currentTutorialScreen].imageUrl2"
+                alt="Tutorial image 2"
+                class="tutorial-image"
+              />
+            }
+          </div>
+        </div>
+        <!-- Footer con navegación -->
+        <div class="tutorial-footer">
+          <!-- Flecha atrás / Cerrar -->
+          <button
+            class="tutorial-nav-btn tutorial-prev-btn"
+            (click)="previousTutorialScreen()"
+            [attr.title]="canGoPrevious() ? 'Pantalla anterior' : 'Cerrar tutorial'"
+          >
+            ← {{ canGoPrevious() ? 'Anterior' : 'Cerrar' }}
+          </button>
+          <!-- Indicador de progreso -->
+          <div class="tutorial-progress">
+            <span>{{ currentTutorialScreen + 1 }} / {{ tutorialScreens.length }}</span>
+          </div>
+          <!-- Flecha adelante -->
+          @if (canGoNext()) {
+            <button
+              class="tutorial-nav-btn tutorial-next-btn"
+              (click)="nextTutorialScreen()"
+              title="Siguiente pantalla"
+            >
+              Siguiente →
+            </button>
+          }
+          <!-- Botón Saltar -->
+          <button class="tutorial-skip-btn" (click)="skipTutorial()" title="Saltar tutorial">
+            Saltar
+          </button>
+        </div>
+      </div>
     </div>
   }
 </div>

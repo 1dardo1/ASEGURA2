@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, of, tap, delay } from 'rxjs';
 import { EventBus } from './event-bus';
+import { DBEvent } from '../game/utils/event.definitions';
 
 export interface Player {
   _id: string;
@@ -34,7 +35,6 @@ export class PlayerService {
     EventBus.on('request-players', () => {
       const currentPlayers = this.playersSignal();
       if (currentPlayers && currentPlayers.length > 0) {
-        // Pequeño delay para asegurar que Phaser esté listo
         setTimeout(() => {
           EventBus.emit('players-loaded', currentPlayers);
         }, 100);
@@ -47,7 +47,7 @@ export class PlayerService {
     this.errorSignal.set(null);
     
     this.http.get<Player[]>(this.apiUrl).pipe(
-      delay(50), // Pequeño delay para evitar race conditions
+      delay(50),
       catchError(err => {
         console.error('Error cargando jugadores:', err);
         this.errorSignal.set('Error cargando jugadores');
@@ -56,7 +56,6 @@ export class PlayerService {
       }),
       tap(players => {
         this.playersSignal.set(players);
-        // Emitir con delay para asegurar sincronización
         setTimeout(() => {
           EventBus.emit('players-loaded', players);
         }, 150);
@@ -66,7 +65,56 @@ export class PlayerService {
     ).subscribe();
   }
 
+  // NUEVOS MÉTODOS PARA ACTUALIZAR JUGADORES
+  updatePlayer(playerId: string, updates: Partial<Player>) {
+    return this.http.patch<Player>(`${this.apiUrl}/${playerId}`, updates).pipe(
+      tap(updatedPlayer => {
+        // Actualizar el signal local
+        const currentPlayers = this.playersSignal();
+        if (currentPlayers) {
+          const updatedPlayers = currentPlayers.map(p => 
+            p._id === playerId ? { ...p, ...updates } : p
+          );
+          this.playersSignal.set(updatedPlayers);
+          EventBus.emit('player-updated', { playerId, updates: updatedPlayer });
+        }
+      }),
+      catchError(err => {
+        console.error('Error actualizando jugador:', err);
+        return of(null);
+      })
+    );
+  }
+
+  updatePlayerPosition(playerId: string, newPosition: number) {
+    return this.updatePlayer(playerId, { position: newPosition });
+  }
+
+  updatePlayerMoney(playerId: string, newMoney: number) {
+    return this.updatePlayer(playerId, { money: newMoney });
+  }
+
+  updatePlayerTurn(playerId: string, turn: boolean) {
+    return this.updatePlayer(playerId, { turn });
+  }
+
+  updatePlayerSkip(playerId: string, skip: boolean) {
+    return this.updatePlayer(playerId, { skip });
+  }
+
+  getRandomEvent() {
+    return this.http.get<DBEvent>('http://localhost:3000/events/random').pipe(
+      catchError(err => {
+        console.error('Error obteniendo evento:', err);
+        return of(null);
+      })
+    );
+  }
+
+
+
+  // Métodos existentes
   getPlayers() { return this.http.get<Player[]>(this.apiUrl); }
   deletePlayer(id: string) { return this.http.delete(`${this.apiUrl}/${id}`); }
-  createPlayer(player: any) { return this.http.post(this.apiUrl, player); }
+  createPlayer(player: any) { return this.http.post<Player>(this.apiUrl, player); }
 }

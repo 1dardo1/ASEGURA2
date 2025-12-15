@@ -1,29 +1,20 @@
 <div class="game-layout">
-  <app-settings-button (click)="openSettings()"></app-settings-button>
+  <app-settings-button></app-settings-button>
 
   <div class="main-container">
     <aside class="players-sidebar">
-      @if (error(); as err) {
-        <div class="error">{{ err }}</div>
-      }
-
-      @if (loading()) {
-        <div class="loading">Cargando jugadores...</div>
-      } @else {
-        @for (player of players(); track player._id; let i = $index) {
-          <div
-            class="player-card"
-            [class.active]="player.turn"
-            [style.background-color]="playerColors[i % playerColors.length]"
-          >
-            <div class="player-name">{{ player.name }}</div>
-            <div class="player-money">{{ player.money }}€</div>
-            <div class="money-indicators">
-              <span class="money-gain">+{{ player.salary }}€</span>
-              <span class="money-loss">-{{ player.rent }}€</span>
-            </div>
+      @for (player of players(); track player._id; let i = $index) {
+        <div 
+          class="player-card" 
+          [class.active]="i === currentPlayerIndex()"
+          [style.background-color]="playerColors[i]">
+          <div class="player-name">{{ player.name }}</div>
+          <div class="player-money">{{ player.money }}€</div>
+          <div class="money-indicators">
+            <div class="money-gain">+{{ player.salary }}€</div>
+            <div class="money-loss">-{{ player.rent }}€</div>
           </div>
-        }
+        </div>
       }
     </aside>
 

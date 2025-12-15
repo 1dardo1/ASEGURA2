@@ -1,10 +1,25 @@
+/* ========================================
+   LAYOUT PRINCIPAL
+   ======================================== */
+
 .game-layout {
+  position: relative;
   width: 100vw;
   height: 100vh;
-  background: #ceebb9; 
-  position: relative;
   overflow: hidden;
+  background: #ceebb9;
 }
+
+.main-container {
+  display: flex;
+  gap: 20px;
+  height: 100%;
+  padding: 20px;
+}
+
+/* ========================================
+   BOTÓN DE CONFIGURACIÓN
+   ======================================== */
 
 app-settings-button {
   position: absolute;
@@ -15,136 +30,56 @@ app-settings-button {
   height: 50px;
 }
 
-.main-container {
-  display: flex;
-  height: 100%;
-  padding: 20px;
-  gap: 20px;
-}
+/* ========================================
+   SIDEBAR DE JUGADORES
+   ======================================== */
 
 .players-sidebar {
-  width: 320px;
   display: flex;
   flex-direction: column;
-  /* CAMBIO: Usar gap en lugar de space-between para margen uniforme */
-  gap: 6px; /* Margen ligero entre tarjetas */
-  max-height: calc(100vh - 40px);
+  gap: 6px;
+  width: 320px;
   min-height: calc(100vh - 40px);
+  max-height: calc(100vh - 40px);
 }
 
+/* ========================================
+   TARJETAS DE JUGADOR
+   ======================================== */
+
 .player-card {
-  border-radius: 25px;
-  padding: 12px 16px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
   align-items: center;
-  justify-content: space-between;
-  min-height: 55px;
-  /* CLAVE: Cada tarjeta sigue ocupando la misma proporción */
+  gap: 12px;
   flex: 1;
+  min-height: 55px;
+  padding: 12px 16px;
+  border-radius: 25px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
   
   &.active {
+    border: 3px solid white;
     transform: scale(1.03);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-    border: 3px solid white;
   }
 }
 
-/* ESCALADO AUTOMÁTICO BASADO EN CANTIDAD DE TARJETAS */
-/* 5+ jugadores: más compacto + gap reducido */
-.players-sidebar:has(.player-card:nth-child(5)) {
-  gap: 5px; /* Menos margen con más jugadores */
-}
-
-.players-sidebar:has(.player-card:nth-child(5)) .player-card {
-  min-height: 48px;
-  padding: 10px 14px;
-}
-
-.players-sidebar:has(.player-card:nth-child(5)) .player-name {
-  font-size: 14px;
-  padding: 6px 12px;
-}
-
-.players-sidebar:has(.player-card:nth-child(5)) .player-money {
-  font-size: 16px;
-}
-
-.players-sidebar:has(.player-card:nth-child(5)) .money-gain,
-.players-sidebar:has(.player-card:nth-child(5)) .money-loss {
-  font-size: 12px;
-  padding: 3px 8px;
-}
-
-/* 7+ jugadores: gap mínimo */
-.players-sidebar:has(.player-card:nth-child(7)) {
-  gap: 4px; /* Margen aún menor */
-}
-
-.players-sidebar:has(.player-card:nth-child(7)) .player-card {
-  min-height: 42px;
-  padding: 8px 12px;
-}
-
-.players-sidebar:has(.player-card:nth-child(7)) .player-name {
-  font-size: 13px;
-  padding: 5px 10px;
-}
-
-.players-sidebar:has(.player-card:nth-child(7)) .player-money {
-  font-size: 15px;
-}
-
-.players-sidebar:has(.player-card:nth-child(7)) .money-gain,
-.players-sidebar:has(.player-card:nth-child(7)) .money-loss {
-  font-size: 11px;
-  padding: 2px 6px;
-}
-
-/* 8 jugadores: gap muy pequeño pero visible */
-.players-sidebar:has(.player-card:nth-child(8)) {
-  gap: 10px; /* Margen mínimo pero presente */
-}
-
-.players-sidebar:has(.player-card:nth-child(8)) .player-card {
-  min-height: 38px;
-  padding: 6px 10px;
-}
-
-.players-sidebar:has(.player-card:nth-child(8)) .player-name {
-  font-size: 12px;
-  padding: 4px 8px;
-}
-
-.players-sidebar:has(.player-card:nth-child(8)) .player-money {
-  font-size: 14px;
-}
-
-.players-sidebar:has(.player-card:nth-child(8)) .money-gain,
-.players-sidebar:has(.player-card:nth-child(8)) .money-loss {
-  font-size: 10px;
-  padding: 2px 5px;
-}
-
-.players-sidebar:has(.player-card:nth-child(8)) .money-indicators {
-  gap: 2px;
-}
-
-/* Estilos base */
 .player-name {
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
   padding: 8px 16px;
   border-radius: 20px;
-  font-weight: bold;
   font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .player-money {
-  color: white;
   font-size: 18px;
   font-weight: bold;
+  text-align: center;
+  color: white;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
@@ -155,35 +90,127 @@ app-settings-button {
 }
 
 .money-gain {
-  background: #27ae60;
-  color: white;
   padding: 4px 12px;
   border-radius: 15px;
+  border: 2px solid white;
   font-size: 14px;
   font-weight: bold;
   text-align: center;
-  border: 2px solid white;
+  color: white;
+  background: #27ae60;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .money-loss {
-  background: #e74c3c;
-  color: white;
   padding: 4px 12px;
   border-radius: 15px;
+  border: 2px solid white;
   font-size: 14px;
   font-weight: bold;
   text-align: center;
-  border: 2px solid white;
+  color: white;
+  background: #e74c3c;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* ========================================
+   AJUSTES RESPONSIVOS - 5+ JUGADORES
+   ======================================== */
+
+.players-sidebar:has(.player-card:nth-child(5)) {
+  gap: 5px;
+}
+
+.players-sidebar:has(.player-card:nth-child(5)) .player-card {
+  min-height: 48px;
+  padding: 10px 14px;
+}
+
+.players-sidebar:has(.player-card:nth-child(5)) .player-name {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.players-sidebar:has(.player-card:nth-child(5)) .player-money {
+  font-size: 16px;
+}
+
+.players-sidebar:has(.player-card:nth-child(5)) .money-gain,
+.players-sidebar:has(.player-card:nth-child(5)) .money-loss {
+  padding: 3px 8px;
+  font-size: 12px;
+}
+
+/* ========================================
+   AJUSTES RESPONSIVOS - 7+ JUGADORES
+   ======================================== */
+
+.players-sidebar:has(.player-card:nth-child(7)) {
+  gap: 4px;
+}
+
+.players-sidebar:has(.player-card:nth-child(7)) .player-card {
+  min-height: 42px;
+  padding: 8px 12px;
+}
+
+.players-sidebar:has(.player-card:nth-child(7)) .player-name {
+  padding: 5px 10px;
+  font-size: 13px;
+}
+
+.players-sidebar:has(.player-card:nth-child(7)) .player-money {
+  font-size: 15px;
+}
+
+.players-sidebar:has(.player-card:nth-child(7)) .money-gain,
+.players-sidebar:has(.player-card:nth-child(7)) .money-loss {
+  padding: 2px 6px;
+  font-size: 11px;
+}
+
+/* ========================================
+   AJUSTES RESPONSIVOS - 8 JUGADORES
+   ======================================== */
+
+.players-sidebar:has(.player-card:nth-child(8)) {
+  gap: 10px;
+}
+
+.players-sidebar:has(.player-card:nth-child(8)) .player-card {
+  min-height: 38px;
+  padding: 6px 10px;
+}
+
+.players-sidebar:has(.player-card:nth-child(8)) .player-name {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.players-sidebar:has(.player-card:nth-child(8)) .player-money {
+  font-size: 14px;
+}
+
+.players-sidebar:has(.player-card:nth-child(8)) .money-gain,
+.players-sidebar:has(.player-card:nth-child(8)) .money-loss {
+  padding: 2px 5px;
+  font-size: 10px;
+}
+
+.players-sidebar:has(.player-card:nth-child(8)) .money-indicators {
+  gap: 2px;
+}
+
+/* ========================================
+   ÁREA DEL TABLERO
+   ======================================== */
+
 .game-board-area {
-  background: #ffffff;
   flex: 1;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .phaser-container {
@@ -191,10 +218,14 @@ app-settings-button {
   height: 100%;
 }
 
+/* ========================================
+   MEDIA QUERIES - TABLET
+   ======================================== */
+
 @media (max-width: 1024px) and (min-width: 768px) {
   .players-sidebar {
     width: 280px;
-    gap: 4px; /* Margen reducido en tablet */
+    gap: 4px;
   }
   
   .players-sidebar:has(.player-card:nth-child(5)) {
@@ -210,29 +241,30 @@ app-settings-button {
   }
   
   .player-card {
-    padding: 10px 14px;
     min-height: 50px;
+    padding: 10px 14px;
   }
   
   .player-name {
-    font-size: 13px;
     padding: 5px 10px;
+    font-size: 13px;
   }
   
   .player-money {
     font-size: 15px;
   }
   
-  .money-gain, .money-loss {
-    font-size: 11px;
+  .money-gain,
+  .money-loss {
     padding: 3px 8px;
     border: 1.5px solid white;
+    font-size: 11px;
   }
   
   app-settings-button {
-    width: 45px;
-    height: 45px;
     top: 20px;
     right: 20px;
+    width: 45px;
+    height: 45px;
   }
 }

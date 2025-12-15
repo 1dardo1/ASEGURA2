@@ -57,5 +57,36 @@ router.delete('/:id', async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 });
+router.patch('/:id', async (req, res) => {
+  try {
+    const playerId = req.params.id;
+    const updates = req.body; 
+
+    if (!playerId) {
+      return res.status(400).json({ error: 'ID del jugador requerido' });
+    }
+
+    const updatedPlayer = await Player.findByIdAndUpdate(
+      playerId,
+      updates, 
+      { 
+        new: true,
+        runValidators: true 
+      }
+    );
+
+    if (!updatedPlayer) {
+      return res.status(404).json({ error: 'Jugador no encontrado' });
+    }
+
+    console.log(`Jugador ${playerId} actualizado:`, updates);
+    res.json(updatedPlayer);
+
+  } catch (error) {
+    console.error('Error actualizando jugador:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
 
 module.exports = router;
