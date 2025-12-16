@@ -21,8 +21,18 @@ export class GameFlowManager {
    */
   initialize(playerCount: number): void {
     this.totalPlayers = playerCount;
-    this.currentPlayerIndex = 0;
+
+    const saved = localStorage.getItem('currentPlayerIndex');
+    this.currentPlayerIndex = saved ? parseInt(saved, 10) || 0 : 0;
+
+    const tokens = TokenManager.getTokensInfo();
+    if (tokens.length > 0) {
+      const currentIdx = tokens[this.currentPlayerIndex].playerIndex;
+      EventBus.emit('turn-changed', { currentPlayerIndex: currentIdx });
+    }
   }
+
+
 
   /**
    * Procesa el lanzamiento del dado y movimiento de la ficha
@@ -158,14 +168,18 @@ export class GameFlowManager {
   /**
    * Cambia al siguiente jugador
    */
+
   private nextTurn(): void {
     this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.totalPlayers;
+    localStorage.setItem('currentPlayerIndex', this.currentPlayerIndex.toString());
+
     const tokens = TokenManager.getTokensInfo();
     const nextPlayerIndex = tokens[this.currentPlayerIndex].playerIndex;
     console.log(`➡️ Turno del jugador ${nextPlayerIndex + 1}`);
     EventBus.emit('turn-changed', { currentPlayerIndex: nextPlayerIndex });
-
   }
+
+
 
   /**
    * Obtiene el índice del jugador actual

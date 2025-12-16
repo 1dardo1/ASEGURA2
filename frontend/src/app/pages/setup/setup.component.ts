@@ -49,6 +49,11 @@ export class SetupComponent {
       title: 'Alquiler ',
       description: 'El alquiler es la cantidad que debes pagar para tener una casa debes pagarla cuando pases por la casilla roja de "alquiler". Si no pagas el alquiler perderas tu siguiente turno',
       imageUrl: 'assets/tutorial/alquiler.png'
+    },
+    {
+      title: 'Targeta central ',
+      description: 'En el centro del tablero veras una targeta indicando de quien es el turno con toda la informacion deljugador incluidos que seguros tiene contratados',
+      imageUrl: 'assets/tutorial/targetaCentral.png'
     }
   ];
 

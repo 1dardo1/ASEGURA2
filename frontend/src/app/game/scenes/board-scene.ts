@@ -126,9 +126,9 @@ export class BoardScene extends Phaser.Scene {
       this.createTokensIfReady(players);
       this.gameFlowManager.initialize(players.length);
       
-      // Mostrar tarjeta del primer jugador
       if (players.length > 0) {
-        this.updatePlayerCard(0);
+        const currentIndex = this.gameFlowManager.getCurrentPlayerIndex();
+        this.updatePlayerCard(currentIndex);
       }
     });
 
