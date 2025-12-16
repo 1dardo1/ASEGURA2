@@ -7,7 +7,7 @@ import { TokenManager } from '../utils/token-manager';
 import { DiceFlowManager } from '../utils/dice-flow-manager';
 import { GameFlowManager } from '../utils/game-flow-manager';
 import { InsuranceModal, InsuranceModalManager } from '../utils/insurance-modal.utils';
-import { EventModalManager, EventModal } from '../utils/event-modal.utils'; 
+import { EventModalManager, EventModal, WinModalManager } from '../utils/event-modal.utils'; 
 import { DiceUtils } from '../utils/dice-utils';
 import { PlayerCard, PlayerCardManager } from '../utils/player-card.utils';
 
@@ -26,6 +26,7 @@ export class BoardScene extends Phaser.Scene {
   private playerService!: PlayerService;
   private eventModal!: EventModal;
   private playerCard!: PlayerCard;
+  
 
 
 
@@ -43,9 +44,9 @@ export class BoardScene extends Phaser.Scene {
     }
 
     const insuranceTypes = ['VIDA', 'HOGAR', 'COCHE', 'SALUD', 'VIAJE', "RESPONSABILIDAD_CIVIL", "CAJA_AHORROS"]; 
-  insuranceTypes.forEach(type => {
-    this.load.image(`insurance-${type}`, `assets/seguros/${type}.png`);
-  });
+    insuranceTypes.forEach(type => {
+      this.load.image(`insurance-${type}`, `assets/seguros/${type}.png`);
+    });
   }
 
   create() {
@@ -63,6 +64,9 @@ export class BoardScene extends Phaser.Scene {
     
     this.playerCard = new PlayerCard(this, width, height);
     PlayerCardManager.setBoardScene(this.playerCard, this);
+
+    WinModalManager.setScene(this);
+
     }
 
   private setupBoard(): void {
@@ -199,24 +203,23 @@ export class BoardScene extends Phaser.Scene {
     this.debugLabels = [];
     // this.showDebugPositions();
   }
-
-  async promptInsurance(description: string, cost: number): Promise<boolean> {
-    return new Promise((resolve: (value: boolean) => void) => {
-      this.insuranceModal.open(description, cost, (accepted: boolean) => {
-        resolve(accepted);
-      });
+  async promptInsurance(description: string,cost: number,iconKey?: string | null): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.insuranceModal.open(description, cost, (accepted) => resolve(accepted), iconKey);
     });
   }
-  async promptEvent(message: string): Promise<void> {
-    return new Promise<void>((resolve) => {
-      this.eventModal.open(message, () => resolve());
+
+
+  async promptEvent(message: string, iconKey?: string | null): Promise<void> {
+    return new Promise<void>(resolve => {
+      this.eventModal.open(message, () => resolve(), iconKey);
     });
   }
   private updatePlayerCard(playerIndex: number): void {
     this.playerService.getPlayers().subscribe(players => {
       if (players && players[playerIndex]) {
         const player = players[playerIndex];
-        const colors = ['#8e44ad', '#e67e22', '#3498db', '#e91e63', '#f1c40f', '#27ae60', '#9b59b6', '#1abc9c'];
+        const colors = ['#e598c3', '#6f2e8d', '#006d9d', '#00aedf', '#018c3a', '#c8ad14', '#ff7903', '#e9447c'];
         
         PlayerCardManager.show({
           name: player.name,

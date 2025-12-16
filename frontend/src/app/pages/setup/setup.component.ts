@@ -32,7 +32,7 @@ export class SetupComponent {
   tutorialScreens: TutorialScreen[] = [
     {
       title: 'Objetivo del Juego',
-      description: 'El objetivo es ser el jugador comprar 1 seguro de cada tipo. Gana dinero al completar una vuelta y paga renta para no perder tu turno.',
+      description: 'El objetivo es ser el primero en comprar 1 seguro de cada tipo. Gana dinero al completar una vuelta y paga renta para no perder tu turno.',
     },
     {
       title: 'Targetas de jugador',
@@ -47,7 +47,7 @@ export class SetupComponent {
     },
     {
       title: 'Alquiler ',
-      description: 'La alquiler es la cantidad que debes pagar para tener una casa debes pagarla cuando pases por la casilla roja de "alquiler". Si no pagas el alquiler perderas tu siguiente turno',
+      description: 'El alquiler es la cantidad que debes pagar para tener una casa debes pagarla cuando pases por la casilla roja de "alquiler". Si no pagas el alquiler perderas tu siguiente turno',
       imageUrl: 'assets/tutorial/alquiler.png'
     }
   ];

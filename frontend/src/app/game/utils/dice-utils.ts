@@ -23,11 +23,19 @@ export class DiceUtils {
     onRoll: (roll: number) => void
   ) {
     DiceUtils.scene = scene;
-    
+
     if (DiceUtils.diceButton) {
       DiceUtils.diceButton.destroy();
     }
 
+    // Fondo circular blanquecino detrás del dado
+    const radius = 140 * scale; // ajusta si hace falta
+    const diceBg = scene.add.graphics();
+    diceBg.fillStyle(0xffffff, 0.75); // blanco con algo de transparencia
+    diceBg.fillCircle(x, y, radius);
+    diceBg.setDepth(999); // justo por debajo del dado
+
+    // Botón del dado
     DiceUtils.diceButton = scene.add.image(x, y, imageKey);
     DiceUtils.diceButton.setInteractive({ useHandCursor: true });
     DiceUtils.diceButton.setDepth(1000);
@@ -39,7 +47,6 @@ export class DiceUtils {
       DiceUtils.showDiceAnimation(roll, onRoll);
     });
 
-    // Crear botón de debug al lado del dado
     if (DiceUtils.DEBUG_MODE) {
       DiceUtils.createDebugButton(scene, x, y, scale, onRoll);
     }
@@ -61,7 +68,7 @@ export class DiceUtils {
     const fontSize = Math.max(12, Math.floor(100 * diceScale));
     const padding = Math.max(6, Math.floor(12 * diceScale));
 
-    DiceUtils.debugButton = scene.add.text(diceX + offsetX, diceY+ 10, 'DEBUG', {
+    DiceUtils.debugButton = scene.add.text(diceX + offsetX, diceY+ 10, 'Manual', {
       fontSize: `${fontSize}px`,
       color: '#ffffff',
       backgroundColor: '#ff6b6b',

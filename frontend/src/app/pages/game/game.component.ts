@@ -22,8 +22,8 @@ export class GameComponent implements OnInit, OnDestroy {
   error = computed(() => this.playerService.errorSignal());
   
   currentPlayerIndex = signal<number>(0);
-  playerColors = ['#8e44ad', '#e67e22', '#3498db', '#e91e63', '#f1c40f', '#27ae60', '#9b59b6', '#1abc9c'];
-  
+  playerColors = ['#e598c3', '#6f2e8d', '#006d9d', '#00aedf', '#018c3a', '#c8ad14', '#ff7903', '#e9447c'];
+        
   private game?: Phaser.Game;
   private turnChangedCallback: (data: { currentPlayerIndex: number }) => void;
 

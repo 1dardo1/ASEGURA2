@@ -1,7 +1,7 @@
 import { getEventForTile, FIXED_EVENTS, DB_EVENT_TILES, EventEffect } from './event.definitions';
 import { PlayerService } from '../../services/player.service';
 import { InsuranceModalManager, InsuranceDecision } from './insurance-modal.utils';
-import { EventModalManager } from './event-modal.utils';
+import { EventModalManager, WinModalManager } from './event-modal.utils';
 
 export class EventFlowManager {
   private static readonly PASS_OR_LAND_TILES = [0, 11];
@@ -26,16 +26,20 @@ export class EventFlowManager {
 
     if (this.PASS_OR_LAND_TILES.includes(newPosition)) {
       await this.handleFixedEvent(newPosition, playerId, playerService);
+      // Evento de sueldo/alquiler procesado, pero el flujo sigue (posición + turno normal)
       return false;
     }
 
     if (event.fromDB) {
       await this.handleDBEvent(newPosition, playerId, playerService);
+      // Devolver false para que GameFlowManager actualice posición y pase turno
       return false;
     }
 
+    // Seguros: solo muestran modal de compra, no cambian turno ni posición
     await this.handleInsuranceEvent(newPosition, event, playerId, playerService);
-    return true;
+    // Devolver false para que GameFlowManager actualice posición y pase turno
+    return false;
   }
 
   private static getPassedSpecialTiles(start: number, end: number, boardSize: number): number[] {
@@ -126,9 +130,30 @@ export class EventFlowManager {
 
     await playerService.updatePlayer(playerId, updateData).toPromise();
 
-    const discountText = hasInsurance ? `\n✅ Seguro ${event.tipo} aplicado (${event.descuento * 100}% del costo)` : '';
-    await EventModalManager.show(`${message}${discountText}`);
+    await playerService.updatePlayer(playerId, updateData).toPromise();
+
+    let extraText = '';
+    if (event.tipo && event.tipo !== 'EVENTO') {
+      if (hasInsurance) {
+        if (event.descuento === 1) {
+          extraText = `\n\n✅ Seguro ${event.tipo} contratado.\nNo tienes que pagar nada.`;
+        } else if (event.descuento === 0.5) {
+          extraText = `\n\n✅ Seguro ${event.tipo} contratado.\nSolo tienes que pagar la mitad.`;
+        } else {
+          extraText = `\n\n✅ Seguro ${event.tipo} contratado.`;
+        }
+      }
+    }
+
+    // Clave de imagen: solo si NO es EVENTO
+    const iconKey =
+      event.tipo && event.tipo !== 'EVENTO'
+        ? `insurance-${event.tipo}`   // coincide con el preload de BoardScene
+        : null;
+
+    await EventModalManager.show(`${message}${extraText}`, iconKey);
     console.log(`✅ Evento aplicado. Jugador actualizado:`, updateData);
+
   }
 
 
@@ -144,6 +169,16 @@ export class EventFlowManager {
       }
 
       // Validar si tiene dinero suficiente
+      // Validar si ya tiene ese seguro
+      if (event.insuranceType && player.insurances.includes(event.insuranceType)) {
+        await EventModalManager.show(
+          `❌ Ya tienes contratado el seguro ${event.insuranceType}.`
+        );
+        console.log(`❌ El jugador ya tiene el seguro ${event.insuranceType}`);
+        return;
+      }
+
+      // Validar si tiene dinero suficiente
       if (player.money < (event.insuranceCost || 0)) {
         await EventModalManager.show(
           `❌ No tienes suficiente dinero para comprar el seguro ${event.insuranceType}.\n` +
@@ -153,12 +188,13 @@ export class EventFlowManager {
         return;
       }
 
+
       const decision = await InsuranceModalManager.show(tile, event, playerId);
       
       if (decision.accepted && decision.insuranceCost && decision.insuranceType) {
         const newMoney = player.money - decision.insuranceCost;
         const newInsurances = [...player.insurances, decision.insuranceType];
-        
+              
         await playerService.updatePlayer(playerId, {
           money: newMoney,
           insurances: newInsurances
@@ -166,9 +202,16 @@ export class EventFlowManager {
 
         console.log(`✅ Seguro ${decision.insuranceType} comprado por ${decision.insuranceCost}€`);
         console.log(`💰 Dinero restante: ${newMoney}€`);
+
+        if (newInsurances.length >= 7) {
+          await WinModalManager.showWinner(player.name);
+          return;
+        }
       } else {
         console.log('❌ Seguro rechazado');
       }
+
+
     } catch (error) {
       console.error('❌ Error manejando seguro:', error);
     }

@@ -48,40 +48,27 @@ export class GameFlowManager {
     const oldPosition = currentToken.currentPosition;
     let newPosition = (oldPosition + diceValue) % boardPositions.length;
 
-    // Si newPosition = 0 pero veníamos de una vuelta completa, debería ser la última casilla
-    if (newPosition === 0 && oldPosition + diceValue > boardPositions.length - 1) {
-      newPosition = boardPositions.length - 1; // Última casilla antes de volver a 0
-    }
+    console.log(`Movimiento circular: ${oldPosition} → ${newPosition}`);
 
     console.log(`Movimiento circular: ${oldPosition} → ${newPosition}`);
 
     // Animar movimiento
     await this.animateTokenMovement(currentToken, newPosition, boardPositions);
 
-
     // Detectar eventos de casillas
     const eventHandled = await EventFlowManager.handleTileEvents(
-      oldPosition, 
-      newPosition, 
-      currentToken.playerId, 
+      oldPosition,
+      newPosition,
+      currentToken.playerId,
       this.playerService
     );
-  
 
-    // SOLO si NO hay evento, continuar flujo normal
+    // SOLO si NO hay flujo especial que se encargue solo
     if (!eventHandled) {
       await this.updatePlayerPositionInDatabase(currentToken.playerId, newPosition);
       TokenManager.movePlayerToken(currentToken.playerId, newPosition, boardPositions);
       this.nextTurn();
     }
-    // Actualizar en base de datos
-    await this.updatePlayerPositionInDatabase(currentToken.playerId, newPosition);
-
-    // Actualizar estado local
-    TokenManager.movePlayerToken(currentToken.playerId, newPosition, boardPositions);
-
-    // Cambiar turno
-    this.nextTurn();
   }
 
   /**
